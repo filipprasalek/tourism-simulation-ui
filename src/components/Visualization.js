@@ -22,7 +22,7 @@ class Visualization extends React.Component {
 
     // TODO: Move to separate file and rework xd
     fetchPointsOfInterests = () => {
-        return fetch('http://localhost:3000/points-of-interests').then((resp) => resp.json())
+        return fetch('http://localhost:5000/points-of-interests').then((resp) => resp.json())
     };
 
     createControlSection = () => {

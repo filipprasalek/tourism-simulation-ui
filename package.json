@@ -13,6 +13,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:fake": "concurrently \"react-scripts start\" \"json-server --watch mocks/fake-api.json --port 5000 \"",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
@@ -33,6 +34,7 @@
     ]
   },
   "devDependencies": {
+    "concurrently": "^5.0.0",
     "json-server": "^0.15.1"
   }
 }
