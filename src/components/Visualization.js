@@ -17,7 +17,7 @@ class Visualization extends React.Component {
 
 
     componentDidMount() {
-        this.fetchPointsOfInterests().then((pois) => this.setState({pointsOfInterests: pois}))
+        this.fetchPointsOfInterests().then((pois) => this.setState({pointsOfInterests: pois}, imageMapResize));
     }
 
     // TODO: Move to separate file and rework xd
@@ -73,11 +73,10 @@ class Visualization extends React.Component {
     }
 
     render() {
-        imageMapResize();
         const mapName = 'cracow-map';
         return (
             <Pane display="flex" flexDirection="row">
-                <Pane marginLeft="2em" marginRight="2em" width="100%" maxHeight="100%" overflow="auto" flexGrow={1}>
+                <Pane marginLeft="2em" marginRight="2em" width="100%" maxHeight="100%" overflow="hidden" flexGrow={1}>
                     <img width="100%" src={cracow} alt="logo" useMap={`#${mapName}`} onMouseMove={(e) => {this.setState({xMouseCoordinate: e.clientX, yMouseCoordinate: e.clientY})}}/>
                     <map name={mapName}>
                         {this.state.pointsOfInterests.map(poi => {
