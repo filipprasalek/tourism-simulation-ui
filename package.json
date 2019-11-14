@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "evergreen-ui": "^4.21.5",
+    "image-map-resizer": "^1.0.10",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-draggable": "^4.1.0",
@@ -30,5 +31,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "json-server": "^0.15.1"
   }
 }

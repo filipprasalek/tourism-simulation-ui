@@ -1,0 +1,6 @@
+{
+  "points-of-interests": [
+    { "id": 1, "name": "Wawel Castle", "shape": "poly", "coordinates":  "292,434,360,329,464,835,400,494"},
+    { "id": 2, "name": "St. Mary's Basilica", "shape": "rect","coordinates": "947,759,808,821" }
+  ]
+}
