@@ -4,7 +4,6 @@
     { "id": 2, "name": "St. Mary's Basilica", "shape": "rect","coordinates": "947,759,808,821" },
     { "id": 3, "name": "Wolnica Square", "shape": "poly", "coordinates": "1305,2923,1397,2903,1411,2991,1325,3021"},
     { "id": 3, "name": "Sukiennice", "shape": "poly", "coordinates": "678,699,600,839,642,871,718,725"},
-    { "id": 3, "name": "Adam Mickiewicz Monument", "shape": "circle", "coordinates": "718,827"},
     { "id": 3, "name": "MC Donald Main Square", "shape": "poly", "coordinates": "426,711,440,681,510,721,492,753"}
   ]
 }

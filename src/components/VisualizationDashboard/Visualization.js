@@ -28,12 +28,49 @@ class Visualization extends React.Component {
         this.initCanvas();
     }
 
+    drawRect = (coordinates) => {
+        let [left, top, right, bot] = coordinates.split(',');
+        this.ctx.globalAlpha = 0.4;
+        this.ctx.strokeRect(left, top, right - left, bot - top);
+        this.ctx.fillRect(left, top, right - left, bot - top);
+        this.ctx.restore();
+    };
+
+    drawPoly = (coordinates) => {
+        const parsedCoordinates = coordinates.match(/\d+,\d+/g)
+        this.ctx.globalAlpha = 0.4;
+        this.ctx.beginPath();
+        parsedCoordinates.forEach(coords => {
+            const [x, y] = coords.split(',');
+            this.ctx.lineTo(x, y);
+        });
+        this.ctx.closePath();
+        this.ctx.stroke();
+        this.ctx.fill();
+        this.ctx.restore();
+    };
+
+    onAreaHover = (e, poiName) => {
+        this.setState({selectedPoi: poiName});
+        let shape = e.target.getAttribute('shape');
+        if (shape === 'circle') {
+            return;
+        }
+        shape = shape.substr(0, 1).toUpperCase() + shape.substr(1);
+        const coordinates = e.target.getAttribute('coords');
+        this[`draw${shape}`](coordinates);
+    };
+
+    offAreaHover = (e, poiName) => {
+        this.setState({selectedPoi: '-'});
+        // TODO: Widen down rectangle
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    };
+
     initCanvas = () => {
         this.canvas.width = this.img.clientWidth;
         this.canvas.height = this.img.clientHeight;
         this.ctx = this.canvas.getContext('2d');
-        this.ctx.strokeRect(10, 530, 100, 100);
-        this.ctx.fillRect(10, 530, 100, 100);
     };
 
     renderAreas = () => {
@@ -43,16 +80,14 @@ class Visualization extends React.Component {
                          title={poi.name}
                          coords={poi.coordinates}
                          shape={poi.shape}
+                         onMouseEnter={(e) => this.onAreaHover(e, poi.name)}
                          onMouseMove={(e) => {
                              this.setState({
-                                 selectedPoi: poi.name,
                                  xMouseCoordinate: e.clientX,
                                  yMouseCoordinate: e.clientY
                              })
                          }}
-                         onMouseLeave={() => {
-                             this.setState({selectedPoi: ""})
-                         }}
+                         onMouseLeave={(e) => this.offAreaHover(e, poi.name)}
             />
         });
     };
@@ -61,7 +96,7 @@ class Visualization extends React.Component {
         return (
             <Pane display="flex" flexDirection="row">
                 <Pane marginLeft="2em" marginRight="2em" width="100%" maxHeight="100%" overflow="hidden" flexGrow={1}>
-                    <div className="container" >
+                    <div className="container">
                         <img className="image"
                              width="100%"
                              ref={node => (this.img = node)}
@@ -69,7 +104,10 @@ class Visualization extends React.Component {
                              alt="logo"
                              useMap={`#${this.mapName}`}
                              onLoad={this.initCanvas}
-                             onMouseMove={(e) => this.setState({xMouseCoordinate: e.clientX, yMouseCoordinate: e.clientY})}
+                             onMouseMove={(e) => this.setState({
+                                 xMouseCoordinate: e.clientX,
+                                 yMouseCoordinate: e.clientY
+                             })}
                              onMouseLeave={() => this.setState({xMouseCoordinate: '-', yMouseCoordinate: '-'})}
                         />
                         <canvas className="canvas" ref={node => (this.canvas = node)}/>
