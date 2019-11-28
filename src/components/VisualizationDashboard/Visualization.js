@@ -17,11 +17,15 @@ class Visualization extends React.Component {
             pedestriants: [
                 {x: 947, y: 759},
                 {x: 947, y: 600},
-                {x: 947, y: 800}
+                {x: 947, y: 800},
+                {x: 500, y: 480},
+                {x: 680, y: 800}
             ],
             xMouseCoordinate: '-',
             yMouseCoordinate: '-',
-            selectedPoi: ''
+            selectedPoi: '',
+            redrawActivePoi: () => {
+            }
         }
     }
 
@@ -32,6 +36,8 @@ class Visualization extends React.Component {
             .then((pois) => this.setState({pointsOfInterests: pois}, imageMapResize));
         this.initCanvas();
         window.addEventListener('resize', this.initCanvas);
+        // TODO: Maybe replace with proper componentShouldUpdate
+        setInterval(this.initCanvas, 2000)
     }
 
     drawRect = (coordinates) => {
@@ -59,7 +65,7 @@ class Visualization extends React.Component {
 
     drawPedestrians = () => {
         const pedestrianSize = this.img.width / this.img.naturalWidth * 7;
-        this.ctx.fillStyle = 'orange';
+        this.ctx.fillStyle = 'red';
         this.ctx.globalAlpha = 1;
         this.state.pedestriants.forEach(pedestrian => {
             const width = (this.img.width / this.img.naturalWidth) * pedestrian.x;
@@ -77,11 +83,15 @@ class Visualization extends React.Component {
         }
         shape = shape.substr(0, 1).toUpperCase() + shape.substr(1);
         const coordinates = e.target.getAttribute('coords');
+        this.setState({redrawActivePoi: () => this[`draw${shape}`](coordinates)});
         this[`draw${shape}`](coordinates);
     };
 
     offAreaHover = (e, poiName) => {
-        this.setState({selectedPoi: '-'});
+        this.setState({
+            selectedPoi: '-', redrawActivePoi: () => {
+            }
+        });
         // TODO: Widen down rectangle
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.drawPedestrians();
@@ -91,7 +101,16 @@ class Visualization extends React.Component {
         this.canvas.width = this.img.clientWidth;
         this.canvas.height = this.img.clientHeight;
         this.ctx = this.canvas.getContext('2d');
-        this.drawPedestrians()
+        this.setState({
+            pedestriants: this.state.pedestriants.map(it => {
+                return {
+                    x: (it.x + Math.floor(Math.random() * 10) - 5),
+                    y: (it.y + Math.floor(Math.random() * 10) - 5)
+                }
+            })
+        }, this.drawPedestrians);
+        // this.drawPedestrians();
+        this.state.redrawActivePoi();
     };
 
     renderAreas = () => {
