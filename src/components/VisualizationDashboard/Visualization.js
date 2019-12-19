@@ -31,14 +31,24 @@ class Visualization extends React.Component {
 
     // TODO: Parametrize
     componentDidMount() {
-        fetch('http://localhost:5000/points-of-interests')
-            .then((resp) => resp.json())
-            .then((pois) => this.setState({pointsOfInterests: pois}, imageMapResize));
+        this.fetchPois();
         this.initCanvas();
         window.addEventListener('resize', this.initCanvas);
         // TODO: Maybe replace with proper componentShouldUpdate
         setInterval(this.initCanvas, 2000)
     }
+
+    fetchPois = () => {
+        fetch('http://localhost:5000/status/pois')
+            .then((resp) => resp.json())
+            .then((pois) => this.setState({pointsOfInterests: pois}, imageMapResize));
+    };
+
+    fetchAgents = (callback) => {
+        fetch('http://localhost:5000/status/agents/positions')
+            .then(resp => resp.json())
+            .then(pois => this.setState({pedestriants: pois}, callback))
+    };
 
     drawRect = (coordinates) => {
         let [left, top, right, bot] = coordinates.split(',');
@@ -101,15 +111,7 @@ class Visualization extends React.Component {
         this.canvas.width = this.img.clientWidth;
         this.canvas.height = this.img.clientHeight;
         this.ctx = this.canvas.getContext('2d');
-        this.setState({
-            pedestriants: this.state.pedestriants.map(it => {
-                return {
-                    x: (it.x + Math.floor(Math.random() * 10) - 5),
-                    y: (it.y + Math.floor(Math.random() * 10) - 5)
-                }
-            })
-        }, this.drawPedestrians);
-        // this.drawPedestrians();
+        this.fetchAgents(this.drawPedestrians);
         this.state.redrawActivePoi();
     };
 
