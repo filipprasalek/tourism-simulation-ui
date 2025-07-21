@@ -9,7 +9,7 @@
     "react-dom": "^16.11.0",
     "react-draggable": "^4.1.0",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -35,6 +35,6 @@
   },
   "devDependencies": {
     "concurrently": "^5.0.0",
-    "json-server": "^0.15.1"
+    "json-server": "^1.0.0-beta.3"
   }
 }
